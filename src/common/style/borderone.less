@@ -1,0 +1,42 @@
+
+
+
+.border(@borderColor){
+		position: relative;
+        width: 100%;
+
+    &::after{
+        content: "";
+    	position: absolute;
+    	bottom: 0;
+        left: 0;
+        width: 100%;
+        border-top: 1px solid @borderColor;
+    }
+}
+
+.bordernone{
+
+
+    &::after{
+        display: none;
+    }
+}
+
+@media (min-device-pixel-ratio: 1.5) {
+	.border{
+
+        &::after{
+        	transform: scaleY(0.7);
+        }
+	}
+}
+
+@media (min-device-pixel-ratio: 2) {
+	.border{
+
+        &::after{
+        	transform: scaleY(0.5);
+        }
+	}
+}

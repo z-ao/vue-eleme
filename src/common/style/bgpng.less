@@ -1,0 +1,11 @@
+@size: '@2x.png' ;
+@bigsize: '@3x.png';
+
+.bgimg(@path) {
+	background-image: url('../../components/@{path}@{size}');
+	background-repeat: no-repeat;
+
+	@media (min-device-pixel-ratio: 3) {
+		background-image: url('../../components/@{path}@{bigsize}');
+	}
+}
