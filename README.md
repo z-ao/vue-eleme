@@ -1,6 +1,4 @@
-# sell
-
-> sell app
+# vue仿饿了么app案例
 
 ## Build Setup
 
