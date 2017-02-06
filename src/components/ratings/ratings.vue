@@ -11,12 +11,12 @@
                     <div class="overview-right">
                         <div class="score-wrapper">
                             <span class="title">服务态度</span>
-                            <star :size="25" :score="seller.serviceScore" class="star"></star>
+                            <star :size="20" :score="seller.serviceScore" class="star"></star>
                             <span class="score">{{seller.serviceScore}}</span>
                         </div>
                         <div class="score-wrapper">
                             <span class="title">商品评分</span>
-                            <star :size="25" :score="seller.serviceScore"  class="star"></star>
+                            <star :size="20" :score="seller.serviceScore"  class="star"></star>
                             <span class="score">{{seller.foodScore}}</span>
                         </div>
                         <div class="delivery-wrapper">

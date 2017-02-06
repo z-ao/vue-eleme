@@ -1,25 +1,12 @@
-# vue仿饿了么app案例
+##易用
+已经会了HTML,CSS,JavaScript？即刻阅读指南开始构建应用！
 
-## Build Setup
+ 
+##灵活
+简单小巧的核心，渐进式技术栈，足以应付任何规模的应用。
 
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
-```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+ 
+##性能
+17kb min+gzip 运行大小
+超快虚拟 DOM 
+最省心的优化# vue仿饿了么app案例
