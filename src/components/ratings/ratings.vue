@@ -1,5 +1,5 @@
 <template>
-   <div class="ratings" v-el:rating>
+   <div class="ratings" ref="rating">
         <div class="rating" v-if="seller">
             <div class="ratings-content">
                 <div class="overview">
@@ -27,7 +27,12 @@
                 </div>
             </div>
             <split></split>
-            <ratingselect :select-type="selectType" :desc="desc" :ratings="ratings" :only-content="onlyContent"></ratingselect>
+            <ratingselect :select-type="selectType" 
+                :desc="desc" :ratings="ratings" 
+                :only-content="onlyContent"
+                v-on:ratingtypetogglecontent="foodToggleContent"
+                v-on:ratingtypeselect="foodSelect"
+            ></ratingselect>
             <div class="rating-wrapper">
                 <ul v-if="ratings.length">
                     <li v-for="rating in ratings" class="rating-item" v-show="needshow(rating.rateType, rating.text)">
@@ -74,16 +79,16 @@ const ALL = 2;
 
 export default {
     created() {
-        this.$http.get('/api/ratings').then((response) => {
-            response = response.body;
-            if (response.errno === 0) {
-                this.ratings = response.data;
-                this.$nextTick(() => {
-                    this.scroll = new Bscroll(this.$els.rating, {
-                        click: true
-                    });
-                });
-            };
+        this.$nextTick(() => {
+            this.scroll = new Bscroll(this.$refs.rating, {
+                click: true
+            });
+            this.$http.get('api/ratings').then((response) => {
+                response = response.body;
+                if (response.errno === 0) {
+                    this.ratings = response.data;
+                }
+            });
         });
     },
     data() {
@@ -113,24 +118,24 @@ export default {
             } else {
                 return type === this.selectType;
             }
+        },
+        foodSelect(type) {
+            this.selectType = type;
+            this.$nextTick(() => {
+                this.scroll.refresh();
+            });
+        },
+        foodToggleContent(onlyContent) {
+            this.onlyContent = !onlyContent;
+            this.$nextTick(() => {
+                this.scroll.refresh();
+            });
         }
     },
     filters: {
         formatDate(time) {
             let date = new Date(time);
             return formatDate(date, 'yyyy-MM-dd hh:mm');
-        }
-    },
-    events: {
-        'ratingtype.select'(type) {
-            this.selectType = type;
-            this.$nextTick(() => {
-                this.scroll.refresh();
-            });
-        },
-        'ratingtype.toggleContent'(onlyContent) {
-            this.onlyContent = onlyContent;
-            this.scroll.refresh();
         }
     },
     components: {

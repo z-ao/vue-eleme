@@ -11,7 +11,6 @@
 </template>
 
 <script type="text/javascript">
-/* eslint-disable no-new */
 import Vue from 'vue';
 
   export default {
@@ -31,7 +30,7 @@ import Vue from 'vue';
         } else {
           this.food.count++;
         };
-        this.$dispatch('cart.add', event.target);
+        this.$emit('cartadd', event.target);
       },
       decreaseCart(event) {
         if (!event._constructed) {

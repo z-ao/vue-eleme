@@ -4,13 +4,13 @@
     <div class="tab">
       <ul>
         <li class="tab-item">
-          <a v-link="{path: '/goods'}" class="active">商品</a>
+          <router-link to="/goods">商品</router-link>
         </li>
         <li class="tab-item">
-          <a v-link="{path: '/ratings'}">评论</a>
+          <router-link to="/ratings">评论</router-link>
         </li>
         <li class="tab-item">                  
-          <a v-link="{path: '/seller'}">商家</a>
+          <router-link to="/seller">商家</router-link>
         </li>
       </ul>
     </div>
@@ -22,18 +22,18 @@
 import header from 'components/header/header';
 
 export default {
-  data() {
-    return {
-      seller: {}
-    };
-  },
-  created() {
+  mounted() {
     this.$http.get('/api/seller').then((response) => {
       response = response.body;
       if (response.errno === 0) {
         this.seller = response.data;
       };
     });
+  },
+  data() {
+    return {
+      seller: {}
+    };
   },
   components: {
     vheader: header

@@ -1,6 +1,6 @@
 <template>
 <transition name="move">
-  <div class="food" v-show="showFlage" v-el:food transition="move">
+  <div class="food" v-show="showFlage" ref="food">
     <div class="food-content">
       <div class="image-header">
         <img :src="food.image">
@@ -22,7 +22,9 @@
         <div class="cartcontrol-wrapper">
           <cartcontrol :food="food"></cartcontrol>
         </div>
-        <div @click.stop.prevent="addFirst" class="buy" v-show="!food.count || food.count == 0" transition="fade">加入购物车</div>     
+        <transition name="fade">
+        <div @click.stop.prevent="addFirst" class="buy" v-show="!food.count || food.count == 0">加入购物车</div> 
+        </transition>    
       </div>
       <split></split>
       <div class="info" v-show="food.info">
@@ -32,7 +34,13 @@
       <split></split>
       <div class="rating">
         <h4 class="title">商品评价</h4>
-        <ratingselect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+        <ratingselect :select-type="selectType" 
+        :only-content="onlyContent" 
+        :desc="desc" 
+        :ratings="food.ratings"
+        v-on:ratingtypetogglecontent="foodToggleContent"
+        v-on:ratingtypeselect="foodSelect"
+        ></ratingselect>
         <div class="rating-wrapper">
           <ul v-show="food.ratings && food.ratings.length">
             <li v-for="rating in food.ratings" v-show="needShow(rating.rateType,rating.text)" class="rating-item">
@@ -95,7 +103,7 @@ export default {
       this.onlyContent = true;
       this.$nextTick(() => {
         if (!this.scroll) {
-          this.scroll = new Bscroll(this.$els.food, {
+          this.scroll = new Bscroll(this.$refs.food, {
             click: true
           });
         } else {
@@ -112,7 +120,7 @@ export default {
       };
       Vue.set(this.food, 'count', 1);
       this.food.count = 1;
-      this.$dispatch('cart.add', event.target);
+      this.$emit('cartadd', event.target);
     },
     needShow(type, text) {
       if (this.onlyContent && !text) {
@@ -123,17 +131,15 @@ export default {
       } else {
         return type === this.selectType;
       }
-    }
-  },
-  events: {
-    'ratingtype.select'(type) {
+    },
+    foodSelect(type) {
       this.selectType = type;
       this.$nextTick(() => {
         this.scroll.refresh();
       });
     },
-    'ratingtype.toggleContent'(onlyContent) {
-      this.onlyContent = onlyContent;
+    foodToggleContent(onlyContent) {
+      this.onlyContent = !onlyContent;
       this.$nextTick(() => {
         this.scroll.refresh();
       });
@@ -164,10 +170,9 @@ export default {
       bottom: 48px;
       z-index: 30px;
       background-color: #fff;
-      &.move-transition{
-        transition: all .2s linear;
-        transform: translate3d(0,0,0);
-      }
+      transition: all .2s linear;
+      transform: translate3d(0,0,0);
+
       &.move-enter, &.move-leave{
         transform: translate3d(100%,0,0);
       }

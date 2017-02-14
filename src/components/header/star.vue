@@ -1,20 +1,29 @@
 <template>
-<p class="sellerStar">
-    <img v-for="star in score - 1" class="ostar" :width="size"  :height="size" src="../header/star24_on@2x.png">
-    <img v-for="star in (5 - score)" class="fsat" :width="size" :height="size"  src="../header/star24_off@2x.png">
-</p>
+    <p class="sellerStar">
+        <img v-for="light in lights" class="ostar" :width="size" :height="size" key="index" src="../header/on.png">
+    </p>
 </template>
 
 <script type="text/javascript">
 	export default{
 		props: {
 			score: {
-				type: Number
+				type: Number,
+                default: 0
 			},
             size: {
-                type: Number
+                type: Number,
+                default: 0
             }
-		}
+		},
+        computed: {
+            lights() {
+                return Math.floor(this.score);
+            },
+            flows() {
+                return Math.ceil(5 - this.score);
+            }
+        }
 	};
 </script>
 

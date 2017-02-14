@@ -1,5 +1,5 @@
 <template>
-    <div class="sellerx" v-el:seller>
+    <div class="sellerx" ref="seller">
         <div class="seller-content">
         	<div class="overview">
         		<h4 class="title">{{seller.name}}</h4>
@@ -40,17 +40,17 @@
             		<p class="content">{{seller.bulletin}}</p>
             	</div>
             	<ul v-if="seller.supports" class="supports">
-        	        <li v-for="item in seller.supports" class="support-item">
-        	    	    <span class="icon" :class="classMap[seller.supports[$index].type]"></span>
-        	    	    <span class="text">{{seller.supports[$index].description}}</span>
+        	        <li v-for="(item, index) in seller.supports" class="support-item">
+        	    	    <span class="icon" :class="classMap[seller.supports[index].type]"></span>
+        	    	    <span class="text">{{seller.supports[index].description}}</span>
         	        </li>
         	    </ul>
             </div>
         	<split></split>
             <div class="pics">
                 <h4 class="title">商家实景</h4>
-                <div class="pic-wrapper" v-el:picwrap>
-                    <ul class="pic-list" v-el:piclist>
+                <div class="pic-wrapper" ref="picwrap">
+                    <ul class="pic-list" ref="piclist">
                         <li class="pic-item" v-for="pic in seller.pics">
                             <img :src="pic" width="120" height="90">
                         </li>
@@ -82,10 +82,10 @@ export default {
             classMap: ['decrease', 'discount', 'special', 'invoice', 'guarantee']
         };
     },
-    ready() {
+    mounted() {
 		this.$nextTick(() => {
             if (!this.scroll) {
-                this.scroll = new Bscroll(this.$els.seller, {
+                this.scroll = new Bscroll(this.$refs.seller, {
                     click: true
                 });
             } else {
@@ -104,9 +104,9 @@ export default {
             let picWidth = 120;
             let margin = 6;
             let width = (picWidth + margin) * this.seller.pics.length - margin;
-            this.$els.piclist.style.width = width + 'px';
+            this.$refs.piclist.style.width = width + 'px';
             this.$nextTick(() => {
-                this.picScroll = new Bscroll(this.$els.picwrap, {
+                this.picScroll = new Bscroll(this.$refs.picwrap, {
                     scrollX: true,
                     eventPassthrough: 'vertical'
                 });

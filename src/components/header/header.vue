@@ -29,7 +29,7 @@
         <div class="detailMain">
           <content>
             <h4>{{seller.name}}</h4>
-            <star class="sellerStar" :score="seller.deliveryPrice" :size="24"></star>
+            <star class="sellerStar" :score="seller.score" :size="24"></star>
           </content>
           <content class="discountMes">
             <h4>
@@ -65,11 +65,9 @@ import star from 'components/header/star';
 export default {
   data() {
     return {
-      down: false
+      down: false,
+      classMap: ['decrease', 'discount', 'guarantee', 'invoice', 'special']
     };
-  },
-  ready() {
-    this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special'];
   },
   props: {
     seller: {
@@ -436,15 +434,11 @@ export default {
   }
 
   .ostar{
-    background-size: 100%;
     margin: 0 6px;
-    .bgimg('header/star24_on');
   }
 
   .fsat{
-    background-size: 100%;
     margin: 0 6px;
-    .bgimg('header/star24_off');
   }
  html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
