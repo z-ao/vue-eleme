@@ -15,32 +15,43 @@
       <div class="pay">{{payDesc}}</div>
     </section>
     <section class="ball-container">
-      <div transition="drop" v-for="ball in balls" v-show="ball.show" class="ball">
-        <div class="inner inner-hook"></div>
-      </div>
+        <div v-for="(ball, index) in balls">
+            <transition name="drop"
+                v-on:before-enter="dropBeforeEnter"
+                v-on:enter="dropEnter"
+                v-on:after-enter="dropafterEnter">
+                <div v-show="ball.show" class="ball" :key="index">
+                    <div class="inner inner-hook"></div>
+                </div>
+            </transition>
+         </div>
     </section>
-    <section class="shopcart-list" v-show="listshow" transition="fold">
-      <div class="list-header">
-        <h4 class="title">购物车</h4>
-        <span class="empty" @click="empty">清空</span>
-      </div>
-      <div class="list-content" v-el:list-content>
-        <ul>
-          <li class="food" v-for="food in selectFoods">
-            <span class="name">{{food.name}}</span>
-            <div class="price">
-              <span>￥<i class="pirced">{{food.price * food.count}}</i>
-               </span> 
+    <transition name="fold">
+        <section class="shopcart-list" v-show="listshow">
+            <div class="list-header">
+                <h4 class="title">购物车</h4>
+                <span class="empty" @click="empty">清空</span>
             </div>
-            <div class="cartcontrol-wrapper">
-              <cartcontrol :food="food"></cartcontrol>
+            <div class="list-content" ref="listContent">
+                <ul>
+                    <li class="food" v-for="food in selectFoods">
+                        <span class="name">{{food.name}}</span>
+                        <div class="price">
+                            <span>￥<i class="pirced">{{food.price * food.count}}</i>
+                            </span> 
+                        </div>
+                        <div class="cartcontrol-wrapper">
+                            <cartcontrol :food="food" v-on:cartadd="drop"></cartcontrol>
+                        </div>
+                    </li>
+                </ul>
             </div>
-          </li>
-        </ul>
-      </div>
-    </section>
+        </section>
+    </transition>
   </div> 
-  <div class="list-mask" v-show="listshow" transition="fade" @click="hideList()"></div>
+    <transition name="fade">
+        <div class="list-mask" v-show="listshow" @click="hideList()"></div>
+    </transition>
 </div>
 </template>
 
@@ -114,49 +125,44 @@ import Bscroll from 'better-scroll';
             this.selectFoods.forEach((food) => {
                 food.count = 0;
             });
-        }
-    },
-    transitions: {
-      drop: {
-        beforeEnter(el) {
-          let count = this.balls.length;
-          while (count--) {
-            let ball = this.balls[count];
-            if (ball.show) {
-              /* eslint-disable no-unused-vars */
-              let rect = ball.el.getBoundingClientRect();
-              let x = rect.left - 32;
-              let y = -(window.innerHeight - rect.top - 22);
-              el.style.display = '';
-              el.style.webkitTransform = `translate3d(0,${y}px,0)`;
-              el.style.transform = `translate3d(0,${y}px,0)`;
-              let inner = el.getElementsByClassName('inner-hook')[0];
-              inner.style.webkitTransform = `translate3d(${x}px,0,0)`;
-              inner.style.transform = `translate3d(${x}px,0,0)`;
+        },
+        dropBeforeEnter(el) {
+            let count = this.balls.length;
+            while (count--) {
+                let ball = this.balls[count];
+                if (ball.show) {
+                /* eslint-disable no-unused-vars */
+                    let rect = ball.el.getBoundingClientRect();
+                    let x = rect.left - 32;
+                    let y = -(window.innerHeight - rect.top - 22);
+                    el.style.display = '';
+                    el.style.webkitTransform = `translate3d(0,${y}px,0)`;
+                    el.style.transform = `translate3d(0,${y}px,0)`;
+                    let inner = el.getElementsByClassName('inner-hook')[0];
+                    inner.style.webkitTransform = `translate3d(${x}px,0,0)`;
+                    inner.style.transform = `translate3d(${x}px,0,0)`;
+                }
             }
-          }
         },
-        enter(el) {
-          /* eslint-disable no-unused-vars */
-          let rf = el.offsetHeight;
-          this.$nextTick(() => {
-            el.style.webkitTransform = 'translate3d0,0,0)';
-            el.style.transform = 'translate3d(0,0,0)';
-            let inner = el.getElementsByClassName('inner-hook')[0];
-            inner.style.webkitTransform = 'translate3d(0,0,0)';
-            inner.style.transform = 'translate3d(0,0,0)';
-          });
+        dropEnter(el) {
+            /* eslint-disable no-unused-vars */
+            this.$nextTick(() => {
+                el.style.webkitTransform = 'translate3d(0,0,0)';
+                el.style.transform = 'translate3d(0,0,0)';
+                let inner = el.getElementsByClassName('inner-hook')[0];
+                inner.style.webkitTransform = 'translate3d(0,0,0)';
+                inner.style.transform = 'translate3d(0,0,0)';
+            });
         },
-        afterEnter(el) {
+        dropafterEnter(el) {
           let ball = this.dropBalls.shift();
           if (ball) {
             ball.show = false;
             el.style.display = 'none';
           };
         }
-      }
     },
-    computed: {
+     computed: {
         totalPrice() {
             let total = 0;
             this.selectFoods.forEach((food) => {
@@ -197,7 +203,7 @@ import Bscroll from 'better-scroll';
             if (show) {
                 this.$nextTick(() => {
                     if (!this.scroll) {
-                        this.scroll = new Bscroll(this.$els.listContent, {
+                        this.scroll = new Bscroll(this.$refs.listContent, {
                             click: true
                         });
                     } else {
@@ -334,6 +340,7 @@ import Bscroll from 'better-scroll';
             left: 32px;
             bottom: 22px;
             z-index: 200;
+            transition: all .4s;
 
             &.drop-transition{
                 transition: all .4s cubic-bezier(0.49,-0.29,0.75,0.41);
@@ -428,9 +435,11 @@ import Bscroll from 'better-scroll';
         height: 100%;
         z-index: -2;
         backdrop-filter: blur(10px);
-        transition: all 0.5s;
         opacity: 1;
         background: rgba(7, 17, 27, 0.6);
+        &.fade-enter-active, &.fade-leave-actiev{
+            transition: all 0.5s;
+        }
         &.fade-enter, &.fade-leave{
             opacity: 0;
             background: rgba(7, 17, 27, 0);

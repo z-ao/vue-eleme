@@ -1,15 +1,15 @@
 <template>
   <content v-if="seller" class="cont">
-  	<section class="seller-wrapper" v-el:food-wrapper>
+  	<section class="seller-wrapper" ref="foodWrapper">
   		<ul>
-  			<li v-for="(item,index) in goods" class="menu-item" :class="{'current': currentindex === $index}" @click="selectMenu($index)">
+  			<li v-for="(item,index) in goods" class="menu-item" :class="{'current': currentindex === index}" @click="selectMenu(index)">
   				<span class="text">
-  				  <i v-if="index.type > 0" :class="classMap[index.type]"></i>{{index.name}}
+  				  <i v-if="item.type > 0" :class="classMap[item.type]"></i>{{item.name}}
   				</span>
   			</li>
   		</ul>
   	</section>
-    <section class="seller-food" v-el:food-menu>
+    <section class="seller-food" ref="foodMenu">
     	<ul>
     		<li v-for="item in goods" class="food-list-hook">
     			<h4 class="title">{{item.name}}</h4>
@@ -28,12 +28,11 @@
     						  <i>好评率{{food.rating}}%</i>
     						</p>
     						<p class="price">
-    							<i class="new">￥<span class="pirced">{{food.price}}</span>
-                  </i>
+    							<i class="new">￥<span class="pirced">{{food.price}}</span></i>
     							<i class="old" v-if="food.oldPrice">{{food.oldPrice}}</i>
     						</p>
     						<div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food"></cartcontrol>
+                  <cartcontrol :food="food" v-on:cartadd="cartaddEvent"></cartcontrol>
                 </div>
     					</div>
     				</li>
@@ -41,8 +40,8 @@
     		</li>
     	</ul>
     </section>
-    <shop v-ref:shop :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :select-foods="selectFoods"></shop>
-    <food :food="selectedFood" v-ref:food></food>
+    <shop ref="shop" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :select-foods="selectFoods"></shop>
+    <food :food="selectedFood" ref="food" v-on:cartadd="cartaddEvent"></food>
   </content>
 </template>
 <script>
@@ -62,8 +61,8 @@ export default {
             selectedFood: {}
         };
     },
-    created () {
-        this.$http.get('/api/goods').then((response) => {
+    mounted () {
+        this.$http.get('api/goods').then((response) => {
             response = response.body;
             if (response.errno === 0) {
                 this.goods = response.data;
@@ -71,12 +70,15 @@ export default {
                     this.initscroll();
                     this.calculateHeight();
                 });
-            };
+            }
         });
     },
     props: {
         seller: {
-            type: Object
+            type: Object,
+            default() {
+                return {};
+            }
         }
     },
     computed: {
@@ -104,11 +106,11 @@ export default {
     },
     methods: {
         initscroll() {
-            this.wrapperScroll = new Bscroll(this.$els.foodWrapper, {
+            this.wrapperScroll = new Bscroll(this.$refs.foodWrapper, {
                 click: true
             });
 
-           this.menuScroll = new Bscroll(this.$els.foodMenu, {
+           this.menuScroll = new Bscroll(this.$refs.foodMenu, {
                 click: true,
                 probeType: 3
             });
@@ -118,7 +120,7 @@ export default {
             });
         },
         calculateHeight() {
-            let foodList = this.$els.foodMenu.getElementsByClassName('food-list-hook');
+            let foodList = this.$refs.foodMenu.getElementsByClassName('food-list-hook');
             let height = 0;
             this.listHeight.push(height);
             for (var i = 0; i < foodList.length; i++) {
@@ -135,22 +137,19 @@ export default {
             this.$refs.food.show();
         },
         selectMenu(index) {
-            let foodList = this.$els.foodMenu.getElementsByClassName('food-list-hook');
+            let foodList = this.$refs.foodMenu.getElementsByClassName('food-list-hook');
             let el = foodList[index];
             this.menuScroll.scrollToElement(el, 300);
             this.currentindex = index;
         },
         _drop(target) {
-          this.$refs.shop.drop(target);
+          this.$nextTick(() => {
+            this.$refs.shop.drop(target);
+          });
         },
         cartaddEvent(target) {
-          this.drop(target);
+          this._drop(target);
         }
-    },
-    events: {
-      'cart.add'(target) {
-        this._drop(target);
-      }
     },
     components: {
         shop,
