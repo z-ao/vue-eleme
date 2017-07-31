@@ -142,7 +142,6 @@ export default {
         bottom: 0;
         width: 100%;
         left: 0;
-        overflow: hidden;
             h4{
                 font-weight: 700;
             }
@@ -300,7 +299,7 @@ export default {
             .bgimg('seller/decrease_4');
           }
 
-        	}	
+        	}
         	.icon{
         		display: inline-block;
         		width: 16px;
@@ -320,7 +319,7 @@ export default {
             }
         }
 
-    
+
     .pics{
         padding: 18px;
         .title{
@@ -367,9 +366,9 @@ export default {
         }
     }
 
-        	
+
     }
- 
+
 
 
 </style>

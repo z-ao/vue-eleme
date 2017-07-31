@@ -23,8 +23,8 @@
           <cartcontrol :food="food"></cartcontrol>
         </div>
         <transition name="fade">
-        <div @click.stop.prevent="addFirst" class="buy" v-show="!food.count || food.count == 0">加入购物车</div> 
-        </transition>    
+        <div @click.stop.prevent="addFirst" class="buy" v-show="!food.count || food.count == 0">加入购物车</div>
+        </transition>
       </div>
       <split></split>
       <div class="info" v-show="food.info">
@@ -34,9 +34,9 @@
       <split></split>
       <div class="rating">
         <h4 class="title">商品评价</h4>
-        <ratingselect :select-type="selectType" 
-        :only-content="onlyContent" 
-        :desc="desc" 
+        <ratingselect :select-type="selectType"
+        :only-content="onlyContent"
+        :desc="desc"
         :ratings="food.ratings"
         v-on:ratingtypetogglecontent="foodToggleContent"
         v-on:ratingtypeselect="foodSelect"

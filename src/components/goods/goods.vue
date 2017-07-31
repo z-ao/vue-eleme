@@ -140,7 +140,6 @@ export default {
             let foodList = this.$refs.foodMenu.getElementsByClassName('food-list-hook');
             let el = foodList[index];
             this.menuScroll.scrollToElement(el, 300);
-            this.currentindex = index;
         },
         _drop(target) {
           this.$nextTick(() => {
@@ -190,7 +189,7 @@ export default {
    			font-size: 12px;
    			text-align: center;
 
-   				
+
 
   	        .decrease{
                 display: inline-block;
@@ -281,7 +280,7 @@ export default {
    		    		font-style: normal;
    		    		font-size: 10px;
    		    	}
-   		    	
+
 
    		    	&:last-child{
    		    		.bordernone;
@@ -357,8 +356,8 @@ export default {
 
                 .pirced{
                   font-size: 14px 700;
-                  font-style: normal;           
-                }  
+                  font-style: normal;
+                }
    	    .current{
    	    	position: relative;
    	    	background-color: #fff;

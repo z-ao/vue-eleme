@@ -27,8 +27,8 @@
                 </div>
             </div>
             <split></split>
-            <ratingselect :select-type="selectType" 
-                :desc="desc" :ratings="ratings" 
+            <ratingselect :select-type="selectType"
+                :desc="desc" :ratings="ratings"
                 :only-content="onlyContent"
                 v-on:ratingtypetogglecontent="foodToggleContent"
                 v-on:ratingtypeselect="foodSelect"
@@ -149,10 +149,8 @@ export default {
     .ratings{
         position: absolute;
         top: 174px;
-        bottom: 0;
-        width: 100%;
         left: 0;
-        overflow: hidden;
+        width: 100%;
         .overview{
             display: flex;
             padding: 18px 0;
